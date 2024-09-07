@@ -1,114 +1,49 @@
-require("dotenv").config();
+// src/controllers/teamController.js
+const Team = require("../dataModels/teamModel"); // Import the Team model
+const StatusOption = require("../dataModels/taskConfigurationOptionModels/statusOption");
+const TypeOption = require("../dataModels/taskConfigurationOptionModels/typeOption");
 
-const { Team } = require("../dataModels/teamModel");
-const { User } = require("../dataModels/userModel");
-const { Product } = require("../dataModels/productModel");
-
-//get all teams
 const createTeam = async (req, res) => {
   try {
-    const { productID, assignedBy, assignedTo, watcher, accessTo } = req.body;
-    const team = await Team.create({
-      productID,
-      assignedBy,
-      assignedTo,
-      watcher,
-      accessTo,
+    const { title, description, status, type } = req.body;
+
+    const statusIds = [];
+    for (let i = 0; i < status.length; i++) {
+      const validStatus = await StatusOption.findById(status[i]).lean();
+      if (validStatus) {
+        statusIds.push(validStatus._id);
+      }
+    }
+
+    const typeIds = [];
+    for (let i = 0; i < type.length; i++) {
+      const validType = await TypeOption.findById(type[i]).lean();
+      if (validType) {
+        typeIds.push(validType._id);
+      }
+    }
+
+    console.log(statusIds, typeIds);
+
+    const team = new Team({
+      title,
+      description,
+      products: [],
+      taskOptions: {
+        status: statusIds,
+        type: typeIds,
+      },
     });
-    res.status(201).json(team);
 
     await team.save();
+
+    res.status(201).json({ message: "success", team });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
 
-//get ALL team
-const getAllTeam = async (req, res) => {
-  try {
-    const { teamId } = req.params;
-    const team = Team.findById(teamId).populate(
-      "productID assignedBy assignedTo watcher accessTo"
-    );
-
-    if (!team) {
-      return res.status(404).json({ error: "Team not found" });
-    }
-    res.status(200).json(team);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
-  }
+module.exports = {
+  createTeam,
 };
-
-//get team by id
-
-const getTeamById = async (req, res) => {
-  try {
-    const { teamId } = req.params;
-    const team = await Team.findById(teamId).populate(
-      "productID assignedBy assignedTo watcher accessTo"
-    );
-    if (!team) {
-      return res.status(404).json({ error: "Team not found" });
-    }
-    res.status(200).json(team);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
-
-//update team by id
-
-const updateTeam = async (req, res) => {
-    try {
-      const { teamId } = req.params;
-      const updatedData = req.body;
-      const updatedTeam = await Team.findByIdAndUpdate(teamId, updatedData, {
-        new: true,
-        runValidators: true,
-      })
-        .populate("productID")
-        .populate("assignedBy")
-        .populate("assignedTo")
-        .populate("watcher")
-        .populate("accessTo")
-        .populate("configOptions");
-  
-      if (!updatedTeam) {
-        return res.status(404).json({ error: "Team not found" });
-      }
-  
-      res.status(200).json({ message: "Team updated successfully", updatedTeam });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  };
-
-  //delete a team by ID
-
-  const deleteTeam = async (req, res) => {
-    try {
-      const { teamId } = req.params;    
-      const deletedTeam = await Team.findByIdAndDelete(teamId);
-
-      if (!deletedTeam) {
-        return res.status(404).json({ error: "Team not found" });
-      }
-      res.status(204).json({ message: "Team deleted successfully" });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Internal server error" });
-    }    
-  };
-
-  module.exports = {
-    createTeam,
-    getAllTeam,
-    getTeamById,
-    updateTeam,
-    deleteTeam
-  };

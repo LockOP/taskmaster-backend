@@ -20,10 +20,10 @@ const register = async (req, res) => {
 
     // Create a new user
     const newUser = new User({
-        firstName,
-        lastName,
-        email,
-        password: hashedPassword,
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
     });
 
     await newUser.save();
@@ -65,14 +65,21 @@ const login = async (req, res) => {
 
     // Create a JWT token
     const token = jwt.sign(
-      { userId: user._id, email: user.email },
+      { userId: user._id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
       {
         expiresIn: "2h",
       }
     );
 
-    res.status(200).json({ token, message: "Logged in successfully" });
+    res.status(200).json({
+      token: token,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.role,
+      message: "Logged in successfully",
+    });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
