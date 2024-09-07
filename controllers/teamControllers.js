@@ -1,8 +1,8 @@
 require("dotenv").config();
 
-const { Team } = require("../dataModels/teamTable");
-const { User } = require("../dataModels/userTable");
-const { Product } = require("../dataModels/productTable");
+const { Team } = require("../dataModels/teamModel");
+const { User } = require("../dataModels/userModel");
+const { Product } = require("../dataModels/productModel");
 
 //get all teams
 const createTeam = async (req, res) => {

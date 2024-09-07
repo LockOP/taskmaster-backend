@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-const { User } = require("../dataModels/userTable");
+const { User } = require("../dataModels/userModel");
 
 
 const register = async (req, res) => {
@@ -36,10 +36,12 @@ const register = async (req, res) => {
 
 const logIn = async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const user = await User.findOne({username});
+    const { email, password } = req.body;
+    const user = await User.findOne({emai});
+    console.log({email});
+    
     if (!user) {
-      return res.status(401).json({ error: "Invalid username or password" });
+      return res.status(401).json({ error: "Invalid email or password" });
     }
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {

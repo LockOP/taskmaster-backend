@@ -11,4 +11,4 @@ userRouter.post("/register", register);
 userRouter.post("/logIn", logIn);
 userRouter.delete("/delete/:userId", deleteUser); // FOR DEV USE ONLY // CREATE DISABLE FOR PROD USE
 
-module.exports = { userRouter };
+module.exports =  userRouter ;

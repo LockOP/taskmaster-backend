@@ -1,8 +1,8 @@
 // src/controllers/productController.js
-import Product from '../models/Product'; // Import the Product model
+const Product =require('../dataModels/productModel') ; // Import the Product model
 
 // Create a new product
-export const createProduct = async (req, res) => {
+const createProduct = async (req, res) => {
     try {
         const { title, description, productID } = req.body;
 
@@ -21,7 +21,7 @@ export const createProduct = async (req, res) => {
 };
 
 // Get all products
-export const getAllProducts = async (req, res) => {
+const getAllProducts = async (req, res) => {
     try {
         const products = await Product.find();
         res.status(200).json(products);
@@ -32,7 +32,7 @@ export const getAllProducts = async (req, res) => {
 };
 
 // Get a specific product by ID
-export const getProductById = async (req, res) => {
+const getProductById = async (req, res) => {
     try {
         const { productId } = req.params;
         const product = await Product.findById(productId);
@@ -47,7 +47,7 @@ export const getProductById = async (req, res) => {
 };
 
 // Update a product by ID
-export const updateProduct = async (req, res) => {
+const updateProduct = async (req, res) => {
     try {
         const { productId } = req.params;
         const updatedData = req.body;
@@ -68,7 +68,7 @@ export const updateProduct = async (req, res) => {
 };
 
 // Delete a product by ID
-export const deleteProduct = async (req, res) => {
+const deleteProduct = async (req, res) => {
     try {
         const { productId } = req.params;
         const deletedProduct = await Product.findByIdAndDelete(productId);
@@ -82,3 +82,12 @@ export const deleteProduct = async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 };
+
+
+module.exports = {
+    createProduct,
+    getAllProducts,
+    getProductById,
+    updateProduct,
+    deleteProduct,
+}

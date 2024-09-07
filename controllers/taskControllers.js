@@ -1,5 +1,5 @@
 // src/controllers/taskController.js
-const Task = require('../models/Task'); // Import the Task model
+const Task = require('../dataModels/taskModel'); // Import the Task model
 
 // Create a new task
 const createTask = async (req, res) => {
