@@ -10,20 +10,18 @@ const TeamSchema = new mongoose.Schema(
         ref: "product", // Reference to the Product model
       },
     ],
-    taskOptions: {
-      status: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "statusOption",
-        },
-      ],
-      type: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "typeOption",
-        },
-      ],
-    },
+    statusOptions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "statusOption",
+      },
+    ],
+    typeOptions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "typeOption",
+      },
+    ],
   },
   { timestamps: true }
 );

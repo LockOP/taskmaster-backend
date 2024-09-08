@@ -4,6 +4,10 @@ const productSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     description: { type: String, default: "" },
+    team: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "team",
+    },
   },
   { timestamps: true }
 );

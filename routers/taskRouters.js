@@ -1,19 +1,17 @@
 // // src/routers/taskRoutes.js
-// const express = require("express");
-// const {
-//     createTask,
-//     getAllTasks,
-//     getTaskById,
-//     updateTask,
-//     deleteTask,
-// } = require("../controllers/taskControllers");
+const express = require("express");
+const {
+  createTask,
+  updateStatus,
+  getTask,
+  updateTask,
+} = require("../controllers/taskControllers");
 
-// const router = express.Router();
+const taskRouter = express.Router();
 
-// router.post("/tasks", createTask);
-// router.get("/tasks", getAllTasks);
-// router.get("/tasks/:taskId", getTaskById);
-// router.patch("/tasks/:taskId", updateTask);
-// router.delete("/tasks/:taskId", deleteTask);
+taskRouter.post("/task", createTask);
+taskRouter.patch("/task/:taskId/status/:statusId", updateStatus);
+taskRouter.get("/task/:taskId", getTask);
+taskRouter.patch("/task/:taskId", updateTask);
 
-// module.exports = router;
+module.exports = taskRouter;

@@ -12,7 +12,9 @@ const register = async (req, res) => {
     // Check if the user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      return res
+        .status(400)
+        .json({ message: "User already exists", error: "User already exists" });
     }
 
     // Hash the password
@@ -42,7 +44,10 @@ const register = async (req, res) => {
       .json({ token, message: "User registered successfully" });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({
+      error: error?.message || "Internal server error",
+      message: error?.message || "Internal server error",
+    });
   }
 };
 
@@ -54,13 +59,18 @@ const login = async (req, res) => {
     // Find the user by email
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "Invalid email or password" });
+      return res.status(400).json({
+        message: "Invalid email",
+        error: "Invalid email",
+      });
     }
 
     // Compare the provided password with the hashed password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(400).json({ message: "Invalid email or password" });
+      return res
+        .status(400)
+        .json({ message: "Invalid password", error: "Invalid password" });
     }
 
     // Create a JWT token
@@ -78,11 +88,39 @@ const login = async (req, res) => {
       lastName: user.lastName,
       email: user.email,
       role: user.role,
+      id: user._id,
       message: "Logged in successfully",
     });
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({
+      error: error?.message || "Internal server error",
+      message: error?.message || "Internal server error",
+    });
   }
 };
 
-module.exports = { register, login };
+const validateToken = (req, res) => {
+  try {
+    // Get the token from the request header or body
+    const token = req.body.token || req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(400).json({ message: "Token is required" });
+    }
+
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Respond with decoded token data
+    return res.status(200).json({
+      message: "success",
+      user: decoded,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      message: "failed",
+      error: error.message,
+    });
+  }
+};
+
+module.exports = { register, login, validateToken };

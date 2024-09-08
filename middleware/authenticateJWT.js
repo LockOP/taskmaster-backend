@@ -23,12 +23,10 @@ const authenticateJWT = (req, res, next) => {
         role: user.role,
       };
 
-      console.log("middleware success", req.user);
-
       next();
     });
   } else {
-    return res.status(400).json({ error: "Unknkown Error" });
+    return res.status(400).json({ error: "Unauthorized" });
   }
 };
 

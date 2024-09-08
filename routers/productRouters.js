@@ -1,19 +1,17 @@
 // // src/routers/productRoutes.js
-// const express = require("express");
-// const {
-//     createProduct,
-//     getAllProducts,
-//     getProductById,
-//     updateProduct,
-//     deleteProduct,
-// } =require("../controllers/productControllers") ;
+const express = require("express");
+const {
+  createProduct,
+  getProduct,
+  getTaskOptionsForProduct,
+  updateProduct,
+} = require("../controllers/productControllers");
 
-// const router = express.Router();
+const productRouter = express.Router();
 
-// router.post("/products", createProduct);
-// router.get("/products", getAllProducts);
-// router.get("/products/:productId", getProductById);
-// router.patch("/products/:productId", updateProduct);
-// router.delete("/products/:productId", deleteProduct);
+productRouter.post("/products", createProduct);
+productRouter.get("/product/:id", getProduct);
+productRouter.get("/productOptions/:id", getTaskOptionsForProduct);
+productRouter.patch("/product/:id", updateProduct);
 
-// module.exports = router;
+module.exports = productRouter;
